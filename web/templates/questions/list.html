@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Вопросы{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Вопросы</h3>
+</div>
+
+{% if current_user.role.value in ['entrepreneur', 'admin'] %}
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Задать вопрос</h5>
+        <form method="post" action="{{ url_for('questions.create_question') }}">
+            <div class="mb-3">
+                <textarea class="form-control" name="text" rows="3" required placeholder="Введите текст вопроса"></textarea>
+            </div>
+            <button class="btn btn-success" type="submit">Отправить</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<div class="list-group shadow-sm">
+    {% for question in questions %}
+        <a class="list-group-item list-group-item-action" href="{{ url_for('questions.view_question', question_id=question.id) }}">
+            <div class="d-flex w-100 justify-content-between">
+                <h6 class="mb-1">{{ question.text[:120] }}{% if question.text|length > 120 %}...{% endif %}</h6>
+                <small>{{ question.answers|length }} ответ(ов)</small>
+            </div>
+            <small class="text-muted">Автор: {{ question.author.username }}</small>
+        </a>
+    {% else %}
+        <div class="list-group-item">Вопросов пока нет</div>
+    {% endfor %}
+</div>
+{% endblock %}

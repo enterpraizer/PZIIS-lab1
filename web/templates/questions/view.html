@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Вопрос #{{ question.id }}{% endblock %}
+{% block content %}
+<div class="card shadow-sm mb-3">
+    <div class="card-body">
+        <h5>Вопрос #{{ question.id }}</h5>
+        <p class="text-muted">Автор: {{ question.author.username }}</p>
+        <p style="white-space: pre-wrap;">{{ question.text }}</p>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-3">
+    <div class="card-body">
+        <h6>Ответы</h6>
+        {% for answer in question.answers %}
+            <div class="border rounded p-2 mb-2">
+                <small class="text-muted">{{ answer.author.username }}</small>
+                <p class="mb-0" style="white-space: pre-wrap;">{{ answer.text }}</p>
+            </div>
+        {% else %}
+            <p class="text-muted mb-0">Ответов пока нет</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% if current_user.role.value in ['consultant', 'admin'] %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h6>Добавить ответ</h6>
+        <form method="post" action="{{ url_for('questions.answer_question', question_id=question.id) }}">
+            <div class="mb-3">
+                <textarea class="form-control" name="text" rows="3" required></textarea>
+            </div>
+            <button class="btn btn-primary" type="submit">Ответить</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

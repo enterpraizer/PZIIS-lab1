@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Admin Articles{% endblock %}
+{% block content %}
+<h3 class="mb-3">Управление статьями</h3>
+<div class="table-responsive shadow-sm">
+    <table class="table table-striped table-hover mb-0 bg-white">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Категория</th>
+                <th>Автор</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for article in articles %}
+            <tr>
+                <td>{{ article.id }}</td>
+                <td>{{ article.title }}</td>
+                <td>{{ article.category.name }}</td>
+                <td>{{ article.author.username }}</td>
+                <td class="d-flex gap-2">
+                    <a class="btn btn-sm btn-outline-primary" href="{{ url_for('articles.view_article', article_id=article.id) }}">View</a>
+                    <form method="post" action="{{ url_for('admin.delete_article', article_id=article.id) }}" onsubmit="return confirm('Удалить статью?');">
+                        <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
